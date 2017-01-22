@@ -31,9 +31,9 @@ public:
 		
 		//Create the object if it is not yet in the map
 		if (!_is_object_in_map(key)) {
-			std::cout << "Tried to retrieve instance of "
+			/*std::cout << "Tried to retrieve instance of "
 				<< typeid(T).name() 
-				<< " but it was not in the registry; adding entry.";
+				<< " but it was not in the registry; adding entry.";*/
 			register_object<T>();
 		}
 		return *(reinterpret_cast<T*>(_typeHashToInstancePointerMap[key]));

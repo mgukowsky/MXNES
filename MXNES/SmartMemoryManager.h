@@ -48,6 +48,15 @@ public:
 		return pNewMemory;
 	}
 
+	/**
+	 * @brief free_all Releases all memory managed by the instance
+	 *
+	 * @return none
+	 */
+	void free_all() {
+		_managedObjects.clear();
+	}
+
 private:
 	std::vector<std::unique_ptr<T[]>> _managedObjects;
 };

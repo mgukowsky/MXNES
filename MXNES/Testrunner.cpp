@@ -4,7 +4,7 @@
 
 using namespace MXNES;
 
-const std::size_t Testrunner::_BORDERSIZ = 30;
+const std::size_t Testrunner::_BORDERSIZ = 60;
 const std::string Testrunner::_BORDERSTR(Testrunner::_BORDERSIZ, '*');
 
 Testrunner::Testrunner()
@@ -13,9 +13,8 @@ Testrunner::Testrunner()
 }
 
 void Testrunner::run_test_suite() {
-	_start_test("foodsf");
-	_test_value(std::string("yo"), std::string("yo"), "yo is yo");
-	_test_value(2, 3, "2 is not 3");
+	_start_test("MXNES Test Suite");
+	_mmu_tests();
 	_end_test();
 }
 

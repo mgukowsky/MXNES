@@ -12,7 +12,12 @@
 #endif
 
 #ifdef MXNES_TESTBUILD
-#define MXNES_DECLARE_TESTRUNNER_ACCESS		friend class Testrunner
+//Use a forward declaration to shut the compiler up when it can't find the namespaced
+//friend class
+namespace MXNES {
+	class Testrunner;
+}
+#define MXNES_DECLARE_TESTRUNNER_ACCESS		friend class MXNES::Testrunner
 #else
 #define MXNES_DECLARE_TESTRUNNER_ACCESS
 #endif

@@ -80,6 +80,8 @@ private:
 		_log(_BORDERSTR);
 	}
 
+	void _mmu_tests();
+
 	std::stack<TestInfo> _testStack;
 	HANDLE _hStdout;
 
