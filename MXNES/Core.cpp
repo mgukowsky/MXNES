@@ -45,8 +45,8 @@ void Core::sleep_for_frame_delay() {
 	elapsedMicroseconds.QuadPart *= 1000000;
 	elapsedMicroseconds.QuadPart /= _SYSTEM_FREQUENCY.QuadPart;
 
-	msToSleep = std::lround(((DEFAULT::FRAMERATE_MS * 1000.0) 
-		- elapsedMicroseconds.QuadPart) / 1000.0);
+	msToSleep = static_cast<u32>(std::lround(((DEFAULT::FRAMERATE_MS * 1000.0) 
+		- elapsedMicroseconds.QuadPart) / 1000.0));
 
 	//Events that block this thread, a long-running function, as well as the first invocation of this function, 
 	//have the potential to cause elapsedMicroseconds to be greater than the framerate's millisecond period, which 

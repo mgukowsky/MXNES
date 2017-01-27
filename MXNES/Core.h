@@ -2,12 +2,14 @@
 
 #include "Registry.h"
 
+#pragma warning(push, 0)
 #include <chrono>
 #include <ctime>
 #include <iostream>
 #include <mutex>
 #include <sstream>
 #include <string>
+#pragma warning(pop)
 
 namespace MXNES {
 
@@ -18,6 +20,9 @@ class Core {
 public:
 	Core();
 	~Core();
+
+	MXNES_DISABLE_ALTERNATE_CONSTRUCTORS(Core);
+	
 	bool is_running() const;
 	void stop_running();
 
@@ -88,6 +93,7 @@ private:
 
 	std::ostream &_logStream, &_errStream;
 	bool _isRunning;
+
 	LARGE_INTEGER _previousTimestamp;
 
 	const LARGE_INTEGER _SYSTEM_FREQUENCY;

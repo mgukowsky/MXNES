@@ -10,6 +10,8 @@ public:
 	Window();
 	~Window();
 
+	MXNES_DISABLE_ALTERNATE_CONSTRUCTORS(Window);
+
 	HWND get_hwnd() const;
 	
 	bool initialize();

@@ -3,10 +3,12 @@
 #include "Core.h"
 #include "Dependency.h"
 
+#pragma warning(push, 0)
 #include <cstdlib>
 #include <memory>
 #include <new>
 #include <vector>
+#pragma warning(pop)
 
 namespace MXNES {
 
@@ -19,6 +21,8 @@ class SmartMemoryManager final : public Dependency<Core> {
 public:
 	SmartMemoryManager() = default;
 	~SmartMemoryManager() = default;
+
+	MXNES_DISABLE_ALTERNATE_CONSTRUCTORS(SmartMemoryManager);
 
 	/**
 	 * @brief allocate_managed_memory Performs a scalar allocation

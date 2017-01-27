@@ -9,6 +9,10 @@ using namespace MXNES::SNES;
 #include "Testrunner.h"
 
 int main(int argc, char **argv) {
+
+	MXNES_UNUSED_PARAMETER(argc);
+	MXNES_UNUSED_PARAMETER(argv);
+
 	Testrunner tr;
 	tr.run_test_suite();
 	
@@ -22,11 +26,16 @@ int main(int argc, char **argv) {
 #else
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+
+	MXNES_UNUSED_PARAMETER(hInstance);
+	MXNES_UNUSED_PARAMETER(hPrevInstance);
+	MXNES_UNUSED_PARAMETER(lpCmdLine);
+	MXNES_UNUSED_PARAMETER(nCmdShow);
+
 	Core &appCore = Core::get_app_core();
 
-	Registry::register_object<Window>();
-	Window &wnd = Registry::retrieve_object<Window>();
-	MMU mmu;
+	Window &wnd = Registry::create_object<Window>();
+
 	if (!wnd.initialize())
 		return 1;
 

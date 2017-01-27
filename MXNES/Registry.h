@@ -1,10 +1,13 @@
 #pragma once
 
 #include "defs.h"
+
+#pragma warning(push, 0)
 #include <iostream>
 #include <memory>
 #include <typeinfo>
 #include <unordered_map>
+#pragma warning(pop)
 
 namespace MXNES {
 
@@ -20,7 +23,7 @@ public:
 			return false;
 		}
 		else {
-			_typeHashToInstancePointerMap[key] = new T;
+			_typeHashToInstancePointerMap.emplace(key, new T);
 			return false;
 		}
 	}
@@ -36,7 +39,13 @@ public:
 				<< " but it was not in the registry; adding entry.";*/
 			register_object<T>();
 		}
-		return *(reinterpret_cast<T*>(_typeHashToInstancePointerMap[key]));
+		return *(reinterpret_cast<T*>(_typeHashToInstancePointerMap[key]._vptr));
+	}
+
+	template<typename T>
+	static T& create_object() {
+		register_object<T>();
+		return retrieve_object<T>();
 	}
 
 	template<typename T>
@@ -48,24 +57,33 @@ public:
 				<< " but it was not in the registry.";
 		}
 		else {
-			delete reinterpret_cast<T*>(_typeHashToInstancePointerMap[key]);
 			_typeHashToInstancePointerMap.erase(key);
 		}
 	}
 
+	static void destroy_all_objects();
+
 private:
+
+	struct _VoidPointerRAIIWrapper {
+		_VoidPointerRAIIWrapper() : _vptr(nullptr) {}
+		_VoidPointerRAIIWrapper(void *vptrArg) : _vptr(vptrArg) {}
+		~_VoidPointerRAIIWrapper() { 
+			if (_vptr != nullptr) 
+				delete _vptr; 
+		}
+
+		void *_vptr;
+	};
 
 	//Delete constructors/destructor to explicitly make this a static class
 	Registry() = delete;
 	~Registry() = delete;
-	Registry(const Registry&) = delete;
-	Registry& operator=(const Registry&) = delete;
-	Registry(const Registry&&) = delete;
-	Registry& operator=(const Registry&&) = delete;
+	MXNES_DISABLE_ALTERNATE_CONSTRUCTORS(Registry);
 
 	static bool _is_object_in_map(const std::size_t key);
 
-	static std::unordered_map<std::size_t, void*> _typeHashToInstancePointerMap;
+	static std::unordered_map<std::size_t, _VoidPointerRAIIWrapper> _typeHashToInstancePointerMap;
 
 };
 

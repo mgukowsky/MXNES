@@ -1,5 +1,9 @@
 #pragma once
 
+#include <common/warnings.h>
+
+#pragma warning(push, 0) //Turn off /Wall warnings from include files...
+
 #include <cmath>
 #include <cstring>
 #include <cstdint>
@@ -10,6 +14,8 @@
 #else
 #define MXNES_FORCEINLINE		inline
 #endif
+
+#pragma warning(pop) //And turn them back on
 
 #ifdef MXNES_TESTBUILD
 //Use a forward declaration to shut the compiler up when it can't find the namespaced
@@ -34,6 +40,20 @@ namespace MXNES {
 #define MXNES_ATOMIC_POINTER		alignas(8)
 #endif
 
+//Turn off unused parameter compiler warnings
+#define MXNES_UNUSED_PARAMETER(PARAM) static_cast<void>(PARAM)
+
+//Disable move/copy/assignment constructors for the given class
+#define MXNES_DISABLE_ALTERNATE_CONSTRUCTORS(CLASS_T) \
+	CLASS_T(const CLASS_T&) = delete; \
+	CLASS_T& operator=(const CLASS_T&) = delete;	\
+	CLASS_T(CLASS_T&&) = delete;	\
+	CLASS_T& operator=(CLASS_T&&) = delete;
+
+//Use this macro to prevent rvalues from being automatically promoted to signed ints,
+//and instead be treated as a TYPE_T
+#define MXNES_DECLARE_RVALUE(TYPE_T, EXPRESSION) static_cast<TYPE_T>(EXPRESSION)
+
 namespace MXNES {
 
 typedef std::int8_t			s8;
@@ -57,7 +77,7 @@ namespace UTIL {
 
 namespace DEFAULT {
 	const u16 APP_WIDTH = 800, APP_HEIGHT = 600;
-	const u32 FRAMERATE_MS = std::lround(1000.0 / 60.0);
+	const u32 FRAMERATE_MS = static_cast<u32>(std::lround(1000.0 / 60.0));
 }
 
 } //namespace MXNES

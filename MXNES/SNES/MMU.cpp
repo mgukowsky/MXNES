@@ -10,11 +10,11 @@ MMU::MMU()
 }
 
 void MMU::set_program_bank(const u8 newBank) {
-	_programBank = u16(newBank) << 4;
+	_programBank = MXNES_DECLARE_RVALUE(u16, (u16(newBank) << 4));
 }
 
 void MMU::set_data_bank(const u8 newBank) {
-	_dataBank = u16(newBank) << 4;
+	_dataBank = MXNES_DECLARE_RVALUE(u16, (u16(newBank) << 4));
 }
 
 void MMU::map_memory(const MMU::MappingModel mappingModel) {
@@ -24,6 +24,12 @@ void MMU::map_memory(const MMU::MappingModel mappingModel) {
 		case MappingModel::LOROM:
 			_map_memory_lorom();
 			break;
+		case MappingModel::HIROM:
+		case MappingModel::LOROM_FASTROM:
+		case MappingModel::HIROM_FASTROM:
+		case MappingModel::EXLOROM:
+		case MappingModel::EXHIROM:
+		case MappingModel::MAPPING_MODEL_TOTAL:
 		default:
 			Dependency<Core>::dep.logerr("Invalid mapping model; defaulting to LOROM");
 			_map_memory_lorom();
@@ -64,19 +70,19 @@ void MMU::_map_memory_lorom() {
 	_allocate_page(0x7E1);
 
 	for (u16 bankIdx = 0; bankIdx < 0x40; ++bankIdx) {
-		u16 bankOffset = bankIdx << 4;
+		u16 bankOffset = MXNES_DECLARE_RVALUE(u16, (u16(bankIdx) << 4));
 
 		//The first 2 pages in the bank are mirrors of 7E0 and 7E1, respectively
 		_map_page(bankOffset, 0x7E0);
-		_map_page(bankOffset + 1, 0x7E1);
+		_map_page(MXNES_DECLARE_RVALUE(u16, (bankOffset + 1)), 0x7E1);
 
 		//The other 14 pages in the bank are not mirrors
 		for (u16 pageIdx = 2; pageIdx < 0x10; ++pageIdx) {
-			_allocate_page(bankOffset + pageIdx);
+			_allocate_page(MXNES_DECLARE_RVALUE(u16, (bankOffset + pageIdx)));
 		}
 	}
 
-	//All subsequent pages until 0x7DF are not mirrors
+	//All subsequent pages until 0x7E0 are not mirrors
 	for (u16 pageIdx = 0x400; pageIdx < 0x7E0; ++pageIdx) {
 		_allocate_page(pageIdx);
 	}
@@ -89,7 +95,7 @@ void MMU::_map_memory_lorom() {
 	//Now, all pages until 0xFE0 are mirrors of the corresponding page
 	//0x800 lower
 	for (u16 pageIdx = 0x800; pageIdx < 0xFE0; ++pageIdx) {
-		_map_page(pageIdx, pageIdx - 0x800);
+		_map_page(pageIdx, MXNES_DECLARE_RVALUE(u16, (pageIdx - 0x800)));
 	}
 
 	//The remaining pages are not mirrors

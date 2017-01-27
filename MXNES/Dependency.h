@@ -58,6 +58,8 @@ protected:
 
 	~Dependency() = default;
 
+	MXNES_DISABLE_ALTERNATE_CONSTRUCTORS(Dependency);
+
 	/**
 	 * The actual instance of the dependency
 	 */

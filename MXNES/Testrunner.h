@@ -4,9 +4,11 @@
 
 #include "Core.h"
 
+#pragma warning(push, 0)
 #include <sstream>
 #include <stack>
 #include <string>
+#pragma warning(pop)
 
 namespace MXNES {
 
@@ -17,6 +19,8 @@ public:
 	Testrunner();
 	~Testrunner() = default;
 
+	MXNES_DISABLE_ALTERNATE_CONSTRUCTORS(Testrunner);
+
 	void run_test_suite();
 
 private:
@@ -26,6 +30,7 @@ private:
 			: testName(testNameArg), hasTestPassed(true) {}
 		std::string testName;
 		bool hasTestPassed;
+
 	};
 
 	template<typename T>

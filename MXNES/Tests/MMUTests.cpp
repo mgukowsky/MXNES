@@ -1,5 +1,7 @@
-#include "../Testrunner.h"
+#ifdef MXNES_TESTBUILD
+#include <common/warnings.h>
 #include "../SNES/MMU.h"
+#include "../Testrunner.h"
 
 using namespace MXNES;
 using namespace MXNES::SNES;
@@ -12,5 +14,10 @@ void Testrunner::_mmu_tests() {
 	_test_value(static_cast<u32>(mmu.read_8_program(0x0040)), 
 		static_cast<u32>(0xAB), "Writes and reads a byte");
 
+	mmu.reset();
+	_test_value(static_cast<u32>(mmu.read_8_program(0x0040)), 
+		static_cast<u32>(0), "Resets properly");
+
 	_end_test();
 }
+#endif

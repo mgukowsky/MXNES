@@ -1,12 +1,27 @@
 #pragma once
 
+#include <common/warnings.h>
 #include "../Component.h"
 #include "../Core.h"
 #include "../SmartMemoryManager.h"
 
+#pragma warning(push, 0)
 #include <cassert>
+#pragma warning(pop)
 
-#define MXNES_ACCESS_MEMORY(ADDR, BANK_T) *(_pageTable[BANK_T | (ADDR >> 12)].pPageMem + (ADDR & 0xFFF))
+//Unoptimized macro works regardless of page array alignment
+//#define MXNES_ACCESS_MEMORY(ADDR, BANK_T) *(_pageTable[BANK_T | (ADDR >> 12)].pPageMem + (ADDR & 0xFFF))
+
+//Optimized version avoids compiling to a scaling with an imul instruction 
+//when performing pointer arithmetic, but requires Page structs to be 
+//exactly 32 bytes wide
+#define MXNES_ACCESS_MEMORY(ADDR, BANK_T) \
+	*(		\
+		reinterpret_cast<Page*>(		\
+			reinterpret_cast<char*>(_pageTable) +		\
+				((static_cast<u32>(BANK_T) | (static_cast<u32>(ADDR) >> 12)) << 5)		\
+		)->pPageMem + (static_cast<u32>(ADDR) & 0xFFF)	\
+	)
 
 namespace MXNES {
 namespace SNES {
@@ -33,6 +48,8 @@ public:
 
 	MMU();
 	~MMU() = default;
+
+	MXNES_DISABLE_ALTERNATE_CONSTRUCTORS(MMU);
 
 	void map_memory(const MappingModel mappingModel);
 
@@ -73,9 +90,12 @@ public:
 	void from_string(const std::string source);
 
 private:
-	struct Page final : public Component {
+	struct alignas(32) Page final : public Component {
 		Page();
 		~Page() = default;
+
+		MXNES_DISABLE_ALTERNATE_CONSTRUCTORS(Page);
+
 		u8 *pPageMem;
 		bool isMapped;
 
@@ -100,7 +120,7 @@ private:
 		refPage.isMapped = true;
 	}
 
-	Page _pageTable[NUM_BANKS * NUM_BANKS_PER_PAGE];
+	alignas(PAGESIZ) Page _pageTable[NUM_BANKS * NUM_BANKS_PER_PAGE];
 	u16 _programBank, _dataBank;
 	u8 *_pDirectPage;
 

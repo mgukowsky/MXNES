@@ -1,6 +1,10 @@
 #pragma once
 
+#pragma warning(push, 0)
 #include <string>
+#pragma warning(pop)
+
+#include "defs.h"
 
 namespace MXNES {
 
@@ -9,6 +13,11 @@ namespace MXNES {
 //be marked with 'final'.
 class Component {
 protected:
+
+	Component() = default;
+	~Component() = default;
+
+	MXNES_DISABLE_ALTERNATE_CONSTRUCTORS(Component);
 
 	/**
 	 * @brief reset Reinitializes all members of the object which are not dependencies
