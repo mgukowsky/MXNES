@@ -3,6 +3,10 @@
 using namespace MXNES;
 
 const char * const Window::_WND_CLASS_NAME = "MXNESWND";
+const DWORD Window::_WINDOW_STYLES = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
+const DWORD Window::_EX_WINDOW_STYLES = WS_EX_OVERLAPPEDWINDOW;
+
+Window* Window::thisWindow = nullptr;
 
 Window::Window()
 	: _hwnd(nullptr) {
@@ -10,9 +14,7 @@ Window::Window()
 }
 
 Window::~Window() {
-	if (_hwnd != nullptr) {
-		DestroyWindow(_hwnd);
-	}
+
 }
 
 HWND Window::get_hwnd() const {
@@ -45,10 +47,10 @@ bool Window::initialize() {
 	rect.right = DEFAULT::APP_WIDTH;
 	rect.bottom = DEFAULT::APP_HEIGHT;
 	AdjustWindowRectEx(&rect, 
-		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, FALSE, WS_EX_OVERLAPPEDWINDOW);
+		_WINDOW_STYLES, TRUE, _EX_WINDOW_STYLES);
 
-	_hwnd = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, _WND_CLASS_NAME, "MXNES", 
-		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT,
+	_hwnd = CreateWindowEx(_EX_WINDOW_STYLES, _WND_CLASS_NAME, "MXNES",
+		_WINDOW_STYLES, CW_USEDEFAULT, CW_USEDEFAULT,
 		rect.right - rect.left, rect.bottom - rect.top, nullptr, nullptr, 
 		GetModuleHandle(nullptr), nullptr);
 
@@ -56,14 +58,25 @@ bool Window::initialize() {
 		Dependency<Core>::dep.alert_err("Failed to create window! This is likely a problem with the app itself. Shutting down...");
 		return false;
 	}
+	
+	//Save the handle into the API wrapper for automatic memory management
+	_hwndWrapper = _hwnd;
+
+	if (!_create_menu())
+		return false;
 
 	ShowWindow(_hwnd, SW_SHOW);
 
 	return true;
 }
 
-void Window::pump_events() const {
+void Window::pump_events() {
 	MSG msg;
+
+	//Make this window the current context
+	//TODO: Should we add a lock here to handle multiple windows in different 
+	//threads accessing the message loop below?
+	thisWindow = this;
 
 	while (PeekMessage(&msg, _hwnd, NULL, NULL, PM_REMOVE) != 0) {
 		TranslateMessage(&msg);
@@ -71,11 +84,82 @@ void Window::pump_events() const {
 	}
 }
 
-LRESULT CALLBACK Window::_wnd_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+bool Window::_create_menu() {
+	_hMenus.insert(_hMenus.begin(), 3, nullptr);
+	for (auto &hMenu : _hMenus) {
+		hMenu = CreateMenu();
+	}
 
+	auto hMenuFile = _hMenus.begin();
+	auto hMenuHelp = hMenuFile + 1;
+	auto hMenuBar = hMenuHelp + 1;
+
+	if (hMenuFile->is_nullptr() || hMenuHelp->is_nullptr() || hMenuBar->is_nullptr()) {
+		Dependency<Core>::dep.alert_err("Failed to create app menu! This is likely a problem with the app itself. Shutting down...");
+		return false;
+	}
+
+	AppendMenu(hMenuFile->get(), MF_STRING, IDM_FILE_OPEN, "&Open ROM...");
+	AppendMenu(hMenuFile->get(), MF_STRING | MF_GRAYED, IDM_FILE_CLOSE, "&Close ROM...");
+	AppendMenu(hMenuFile->get(), MF_SEPARATOR, NULL, nullptr);
+	AppendMenu(hMenuFile->get(), MF_STRING, IDM_FILE_EXIT, "&Exit");
+
+	AppendMenu(hMenuHelp->get(), MF_STRING, IDM_HELP_ABOUT, "&About");
+
+	AppendMenu(hMenuBar->get(), MF_POPUP, reinterpret_cast<UINT_PTR>(hMenuFile->get()), "&File");
+	AppendMenu(hMenuBar->get(), MF_POPUP, reinterpret_cast<UINT_PTR>(hMenuHelp->get()), "&Help");
+
+	SetMenu(_hwnd, hMenuBar->get());
+
+	return true;
+}
+
+const std::string Window::_pick_file() {
+
+	OPENFILENAME ofn;
+	char pathBuff[BUFSIZ];
+	UTIL::zero_memory(&ofn);
+	UTIL::zero_memory(&pathBuff);
+
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	ofn.hwndOwner = _hwnd;
+	ofn.hInstance = GetModuleHandle(NULL);
+	ofn.lpstrFilter = "Text Files (*.txt)\0*.txt\0";
+	ofn.lpstrFile = pathBuff;
+	ofn.nMaxFile = MAX_PATH;
+	ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
+	ofn.lpstrDefExt = "txt";
+
+	if (!GetOpenFileName(&ofn)) {
+		Dependency<Core>::dep.alert_err("Failed to open file!");
+		return "";
+	}
+	else {
+		Dependency<Core>::dep.logmsg(std::string("Selected file: \"") + pathBuff + "\"");
+		return pathBuff;
+	}
+}
+
+//Window::thisWindow MUST be set before entering the message loop which will call this function!
+LRESULT CALLBACK Window::_wnd_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
+		case WM_COMMAND:
+			switch (LOWORD(wParam)) {
+				case IDM_FILE_OPEN:
+					thisWindow->_currentFile = thisWindow->_pick_file();
+					break;
+				case IDM_FILE_EXIT:
+					SendMessage(hwnd, WM_CLOSE, NULL, NULL);
+					break;
+				case IDM_HELP_ABOUT:
+					MessageBeep(MB_ICONINFORMATION);
+					MessageBox(nullptr, "Thanks for using MXNES, an emulator for the NES and SNES consoles, "
+						"by Matt Gukowsky \xA9 2016", "About", MB_OK | MB_ICONQUESTION | MB_TASKMODAL);
+			}
+			break;
+
 		case WM_CLOSE:
-			Core::get_app_core().stop_running();
+			thisWindow->Dependency<Core>::dep.stop_running();
 			break;
 	}
 

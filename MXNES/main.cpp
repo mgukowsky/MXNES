@@ -34,7 +34,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	Core &appCore = Core::get_app_core();
 
-	Window &wnd = Registry::create_object<Window>();
+	Window wnd;
 
 	if (!wnd.initialize())
 		return 1;
@@ -44,7 +44,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		wnd.pump_events();
 	}
 
-	Registry::destroy_object<Window>();
 
 	return 0;
 }

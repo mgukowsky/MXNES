@@ -13,6 +13,9 @@
 //Allow the compiler to remove unreferenced inline functions
 #pragma warning(disable:4514)
 
+//Don't complain if an expression before a comma has no side effect (i.e. if exceptions are turned off)
+#pragma warning(disable:4548)
+
 //XML documentation nonsense
 #pragma warning(disable:4634)
 
