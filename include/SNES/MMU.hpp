@@ -37,6 +37,7 @@ public:
 												NUM_PAGES_PER_BANK = 0x10;
 
 	enum class MappingModel {
+		INVALID,
 		LOROM,
 		HIROM,
 		LOROM_FASTROM,

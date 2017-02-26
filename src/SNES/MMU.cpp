@@ -24,6 +24,7 @@ void MMU::map_memory(const MMU::MappingModel mappingModel) {
 		case MappingModel::LOROM:
 			_map_memory_lorom();
 			break;
+		case MappingModel::INVALID:
 		case MappingModel::HIROM:
 		case MappingModel::LOROM_FASTROM:
 		case MappingModel::HIROM_FASTROM:

@@ -1,5 +1,5 @@
-#include "common/Window.hpp"
 #include "common/resource.h"
+#include "common/Window.hpp"
 
 using namespace MXNES;
 
@@ -84,6 +84,10 @@ void Window::pump_events() {
 	}
 }
 
+const std::string Window::get_selected_file_path() const {
+	return _currentFile;
+}
+
 bool Window::_create_menu() {
 	_hMenus.insert(_hMenus.begin(), 3, nullptr);
 	for (auto &hMenu : _hMenus) {
@@ -125,14 +129,14 @@ const std::string Window::_pick_file() {
 	ofn.lStructSize = sizeof(OPENFILENAME);
 	ofn.hwndOwner = _hwndWrapper.get();
 	ofn.hInstance = _get_hinstance();
-	ofn.lpstrFilter = "Text Files (*.txt)\0*.txt\0";
+	ofn.lpstrFilter = "SNES ROMs (*.sfc)\0*.sfc\0";
 	ofn.lpstrFile = pathBuff;
 	ofn.nMaxFile = MAX_PATH;
 	ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
-	ofn.lpstrDefExt = "txt";
+	ofn.lpstrDefExt = "sfc";
 
 	if (!GetOpenFileName(&ofn)) {
-		Dependency<Core>::dep.alert_err("Failed to open file!");
+		Dependency<Core>::dep.logerr("Something went wrong in the file selection dialog!");
 		return "";
 	}
 	else {
@@ -152,6 +156,8 @@ LRESULT CALLBACK Window::_wnd_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lP
 			switch (LOWORD(wParam)) {
 				case IDM_FILE_OPEN:
 					_thisWindow->_currentFile = _thisWindow->_pick_file();
+					_thisWindow->Dependency<EventQueueManager>::dep.windowQueue.register_event(
+						EventQueue::EVENT_PICK_FILE, nullptr);
 					break;
 				case IDM_FILE_EXIT:
 					SendMessage(hwnd, WM_CLOSE, NULL, NULL);

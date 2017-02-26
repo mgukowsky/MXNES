@@ -48,6 +48,7 @@ public:
 		else {
 			_managedObjects.emplace_back(pNewMemory);
 		}
+		UTIL::zero_memory(pNewMemory, sizeof(T) * numElements);
 		return pNewMemory;
 	}
 

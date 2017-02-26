@@ -8,12 +8,14 @@ const std::size_t Testrunner::_BORDERSIZ = 80;
 const std::string Testrunner::_BORDERSTR(Testrunner::_BORDERSIZ, '*');
 
 Testrunner::Testrunner()
-	: _hStdout(GetStdHandle(STD_OUTPUT_HANDLE)) {
+	: _hStdout(GetStdHandle(STD_OUTPUT_HANDLE)), _numAllTests(0),
+		_numAllPassedTests(0) {
 
 }
 
 void Testrunner::run_test_suite() {
 	_start_test("MXNES Test Suite");
+	_rom_tests();
 	_mmu_tests();
 	_end_test();
 

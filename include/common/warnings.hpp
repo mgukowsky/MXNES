@@ -22,6 +22,9 @@
 //We will allow the compiler to not inline a function if it insists that doing so is a bad idea
 #pragma warning(disable:4710)
 
+//The compiler can inline any function it wants
+#pragma warning(disable:4711)
+
 //This warning doesn't play well with the current MSVC implementation of the alignas() specifier,
 //so we turn it off; turn it on to see the areas where the compiler is adding padding
 #pragma warning(disable:4820)

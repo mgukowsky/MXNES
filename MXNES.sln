@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MXNES", "MXNES\MXNES.vcxproj", "{92E0F8E5-CA55-4C58-9C27-DE15B890444F}"
-EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "OpGen", "OpGen\OpGen.pyproj", "{AEDA635A-3CCB-406C-90B3-E4BFA20C240C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MXNES", "MXNES.vcxproj", "{92E0F8E5-CA55-4C58-9C27-DE15B890444F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +20,15 @@ Global
 		Test|x86 = Test|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AEDA635A-3CCB-406C-90B3-E4BFA20C240C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEDA635A-3CCB-406C-90B3-E4BFA20C240C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AEDA635A-3CCB-406C-90B3-E4BFA20C240C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AEDA635A-3CCB-406C-90B3-E4BFA20C240C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEDA635A-3CCB-406C-90B3-E4BFA20C240C}.Release|x64.ActiveCfg = Release|Any CPU
+		{AEDA635A-3CCB-406C-90B3-E4BFA20C240C}.Release|x86.ActiveCfg = Release|Any CPU
+		{AEDA635A-3CCB-406C-90B3-E4BFA20C240C}.Test|Any CPU.ActiveCfg = Release|Any CPU
+		{AEDA635A-3CCB-406C-90B3-E4BFA20C240C}.Test|x64.ActiveCfg = Release|Any CPU
+		{AEDA635A-3CCB-406C-90B3-E4BFA20C240C}.Test|x86.ActiveCfg = Release|Any CPU
 		{92E0F8E5-CA55-4C58-9C27-DE15B890444F}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{92E0F8E5-CA55-4C58-9C27-DE15B890444F}.Debug|x64.ActiveCfg = Debug|x64
 		{92E0F8E5-CA55-4C58-9C27-DE15B890444F}.Debug|x64.Build.0 = Debug|x64
@@ -35,15 +44,6 @@ Global
 		{92E0F8E5-CA55-4C58-9C27-DE15B890444F}.Test|x64.Build.0 = Test|x64
 		{92E0F8E5-CA55-4C58-9C27-DE15B890444F}.Test|x86.ActiveCfg = Test|Win32
 		{92E0F8E5-CA55-4C58-9C27-DE15B890444F}.Test|x86.Build.0 = Test|Win32
-		{AEDA635A-3CCB-406C-90B3-E4BFA20C240C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AEDA635A-3CCB-406C-90B3-E4BFA20C240C}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{AEDA635A-3CCB-406C-90B3-E4BFA20C240C}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{AEDA635A-3CCB-406C-90B3-E4BFA20C240C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AEDA635A-3CCB-406C-90B3-E4BFA20C240C}.Release|x64.ActiveCfg = Release|Any CPU
-		{AEDA635A-3CCB-406C-90B3-E4BFA20C240C}.Release|x86.ActiveCfg = Release|Any CPU
-		{AEDA635A-3CCB-406C-90B3-E4BFA20C240C}.Test|Any CPU.ActiveCfg = Release|Any CPU
-		{AEDA635A-3CCB-406C-90B3-E4BFA20C240C}.Test|x64.ActiveCfg = Release|Any CPU
-		{AEDA635A-3CCB-406C-90B3-E4BFA20C240C}.Test|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

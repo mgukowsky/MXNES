@@ -2,6 +2,7 @@
 
 #include "common/Core.hpp"
 #include "common/Dependency.hpp"
+#include "common/EventQueueManager.hpp"
 
 #pragma warning(push, 0)
 #include <vector>
@@ -9,7 +10,7 @@
 
 namespace MXNES {
 
-class Window final : private Dependency<Core> {
+class Window final : private Dependency<Core>, private Dependency<EventQueueManager> {
 public:
 	Window();
 	~Window();
@@ -21,6 +22,8 @@ public:
 	bool initialize();
 
 	void pump_events();
+
+	const std::string get_selected_file_path() const;
 
 private:
 	//We need to pass these enum values to WIN32 as uints, so don't use an enum class

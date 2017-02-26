@@ -89,6 +89,7 @@ private:
 	}
 
 	void _mmu_tests();
+	void _rom_tests();
 
 	u32 _numAllTests, _numAllPassedTests;
 	std::stack<TestInfo> _testStack;

@@ -26,6 +26,44 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\common\Blob.hpp" />
+    <ClInclude Include="include\common\Component.hpp" />
+    <ClInclude Include="include\common\Core.hpp" />
+    <ClInclude Include="include\common\defs.hpp" />
+    <ClInclude Include="include\common\Dependency.hpp" />
+    <ClInclude Include="include\common\errors.hpp" />
+    <ClInclude Include="include\common\EventQueue.hpp" />
+    <ClInclude Include="include\common\EventQueueManager.hpp" />
+    <ClInclude Include="include\common\Registry.hpp" />
+    <ClInclude Include="include\common\resource.h" />
+    <ClInclude Include="include\common\SmartMemoryManager.hpp" />
+    <ClInclude Include="include\common\warnings.hpp" />
+    <ClInclude Include="include\common\Window.hpp" />
+    <ClInclude Include="include\SNES\MMU.hpp" />
+    <ClInclude Include="include\SNES\ROM.hpp" />
+    <ClInclude Include="include\SNES\System.hpp" />
+    <ClInclude Include="include\test\Testrunner.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\MXNES.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources\MXNES.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\common\Core.cpp" />
+    <ClCompile Include="src\common\EventQueue.cpp" />
+    <ClCompile Include="src\common\main.cpp" />
+    <ClCompile Include="src\common\Registry.cpp" />
+    <ClCompile Include="src\common\Window.cpp" />
+    <ClCompile Include="src\SNES\MMU.cpp" />
+    <ClCompile Include="src\SNES\ROM.cpp" />
+    <ClCompile Include="src\SNES\System.cpp" />
+    <ClCompile Include="src\test\MMUTests.cpp" />
+    <ClCompile Include="src\test\ROMTests.cpp" />
+    <ClCompile Include="src\test\Testrunner.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{92E0F8E5-CA55-4C58-9C27-DE15B890444F}</ProjectGuid>
     <RootNamespace>MXNES</RootNamespace>
@@ -94,7 +132,30 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Test|x64'">
+    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">
+    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
@@ -275,35 +336,6 @@
       <Message>Generate the opcode functions for the emulated CPU</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="common\Core.cpp" />
-    <ClCompile Include="common\main.cpp" />
-    <ClCompile Include="common\Registry.cpp" />
-    <ClCompile Include="common\Window.cpp" />
-    <ClCompile Include="SNES\MMU.cpp" />
-    <ClCompile Include="test\MMUTests.cpp" />
-    <ClCompile Include="test\Testrunner.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\include\common\Component.hpp" />
-    <ClInclude Include="..\include\common\Core.hpp" />
-    <ClInclude Include="..\include\common\defs.hpp" />
-    <ClInclude Include="..\include\common\Dependency.hpp" />
-    <ClInclude Include="..\include\common\errors.hpp" />
-    <ClInclude Include="..\include\common\Registry.hpp" />
-    <ClInclude Include="..\include\common\resource.h" />
-    <ClInclude Include="..\include\common\SmartMemoryManager.hpp" />
-    <ClInclude Include="..\include\common\warnings.hpp" />
-    <ClInclude Include="..\include\common\Window.hpp" />
-    <ClInclude Include="..\include\SNES\MMU.hpp" />
-    <ClInclude Include="..\include\test\Testrunner.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\resources\MXNES.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="..\resources\MXNES.rc" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

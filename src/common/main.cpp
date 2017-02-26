@@ -1,5 +1,5 @@
-#include "common/Window.hpp"
 #include "SNES/MMU.hpp"
+#include "SNES/System.hpp"
 
 using namespace MXNES;
 using namespace MXNES::SNES;
@@ -34,16 +34,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	Core &appCore = Core::get_app_core();
 
-	Window wnd;
+	System sys;
 
-	if (!wnd.initialize())
+	if (!sys.initialize())
 		return EXIT_FAILURE;
 
 	while (appCore.is_running()) {
 		appCore.sleep_for_frame_delay();
-		wnd.pump_events();
+		sys.process_events();
 	}
-
 
 	return EXIT_SUCCESS;
 }

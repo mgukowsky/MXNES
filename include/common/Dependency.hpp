@@ -13,8 +13,8 @@ namespace MXNES {
  * To help avoid inheritance hierarchy issues, classes which have inherited dependencies
  * should be marked as "final".
  *
- * Furthermore, since this class is meant to be used purely for composition purposes, 
- * inheritance should be private.
+ * Furthermore, since this class is meant to be used purely for composition purposes
+ * by injecting services, inheritance should be private.
  *
  * Usage:
  *		class ServiceA {
