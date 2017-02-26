@@ -1,9 +1,10 @@
 #pragma once
 
-#include <common/warnings.h>
-#include "../Component.h"
-#include "../Core.h"
-#include "../SmartMemoryManager.h"
+#include <common/defs.hpp>
+
+#include <common/Component.hpp>
+#include <common/Core.hpp>
+#include <common/SmartMemoryManager.hpp>
 
 #pragma warning(push, 0)
 #include <cassert>
@@ -29,12 +30,12 @@ namespace SNES {
 /**
  * Emulates the SNES MMU component
  */
-class MMU final : public Dependency<Core>, public Component{
+class MMU final : public Component, private Dependency<Core> {
 MXNES_DECLARE_TESTRUNNER_ACCESS;
 public:
-	static constexpr u32 PAGESIZ = 0x1000;
-	static constexpr u32 NUM_BANKS = 0x100;
-	static constexpr u32 NUM_BANKS_PER_PAGE = 0x10;
+	static constexpr u32	PAGESIZ = 0x1000, 
+												NUM_BANKS = 0x100, 
+												NUM_PAGES_PER_BANK = 0x10;
 
 	enum class MappingModel {
 		LOROM,
@@ -120,7 +121,7 @@ private:
 		refPage.isMapped = true;
 	}
 
-	alignas(PAGESIZ) Page _pageTable[NUM_BANKS * NUM_BANKS_PER_PAGE];
+	alignas(PAGESIZ) Page _pageTable[NUM_BANKS * NUM_PAGES_PER_BANK];
 	u16 _programBank, _dataBank;
 	u8 *_pDirectPage;
 

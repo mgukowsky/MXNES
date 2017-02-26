@@ -1,15 +1,15 @@
-#include "Window.h"
+#include <common/Window.hpp>
 
 using namespace MXNES;
 
 const char * const Window::_WND_CLASS_NAME = "MXNESWND";
-const DWORD Window::_WINDOW_STYLES = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
+const DWORD Window::_WINDOW_STYLES = WS_OVERLAPPED | WS_CAPTION | 
+	WS_SYSMENU | WS_MINIMIZEBOX;
 const DWORD Window::_EX_WINDOW_STYLES = WS_EX_OVERLAPPEDWINDOW;
 
-Window* Window::thisWindow = nullptr;
+Window* Window::_thisWindow = nullptr;
 
-Window::Window()
-	: _hwnd(nullptr) {
+Window::Window() {
 
 }
 
@@ -17,8 +17,8 @@ Window::~Window() {
 
 }
 
-HWND Window::get_hwnd() const {
-	return _hwnd;
+HWND& Window::get_hwnd() {
+	return _hwndWrapper.get();
 }
 
 bool Window::initialize() {
@@ -37,7 +37,8 @@ bool Window::initialize() {
 	wcex.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 
 	if (!RegisterClassEx(&wcex)) {
-		Dependency<Core>::dep.alert_err("Failed to register window class! This is likely a problem with the app itself. Shutting down...");
+		Dependency<Core>::dep.alert_err("Failed to register window class! "
+			"This is likely a problem with the app itself. Shutting down...");
 		return false;
 	}
 
@@ -49,23 +50,21 @@ bool Window::initialize() {
 	AdjustWindowRectEx(&rect, 
 		_WINDOW_STYLES, TRUE, _EX_WINDOW_STYLES);
 
-	_hwnd = CreateWindowEx(_EX_WINDOW_STYLES, _WND_CLASS_NAME, "MXNES",
+	_hwndWrapper = CreateWindowEx(_EX_WINDOW_STYLES, _WND_CLASS_NAME, "MXNES",
 		_WINDOW_STYLES, CW_USEDEFAULT, CW_USEDEFAULT,
 		rect.right - rect.left, rect.bottom - rect.top, nullptr, nullptr, 
 		GetModuleHandle(nullptr), nullptr);
 
-	if (_hwnd == nullptr) {
-		Dependency<Core>::dep.alert_err("Failed to create window! This is likely a problem with the app itself. Shutting down...");
+	if (_hwndWrapper.is_nullptr()) {
+		Dependency<Core>::dep.alert_err("Failed to create window! This is likely "
+			"a problem with the app itself. Shutting down...");
 		return false;
 	}
-	
-	//Save the handle into the API wrapper for automatic memory management
-	_hwndWrapper = _hwnd;
 
 	if (!_create_menu())
 		return false;
 
-	ShowWindow(_hwnd, SW_SHOW);
+	ShowWindow(_hwndWrapper.get(), SW_SHOW);
 
 	return true;
 }
@@ -76,9 +75,9 @@ void Window::pump_events() {
 	//Make this window the current context
 	//TODO: Should we add a lock here to handle multiple windows in different 
 	//threads accessing the message loop below?
-	thisWindow = this;
+	_thisWindow = this;
 
-	while (PeekMessage(&msg, _hwnd, NULL, NULL, PM_REMOVE) != 0) {
+	while (PeekMessage(&msg, _hwndWrapper.get(), NULL, NULL, PM_REMOVE) != 0) {
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
@@ -95,7 +94,8 @@ bool Window::_create_menu() {
 	auto hMenuBar = hMenuHelp + 1;
 
 	if (hMenuFile->is_nullptr() || hMenuHelp->is_nullptr() || hMenuBar->is_nullptr()) {
-		Dependency<Core>::dep.alert_err("Failed to create app menu! This is likely a problem with the app itself. Shutting down...");
+		Dependency<Core>::dep.alert_err("Failed to create app menu! "
+			"This is likely a problem with the app itself. Shutting down...");
 		return false;
 	}
 
@@ -109,7 +109,7 @@ bool Window::_create_menu() {
 	AppendMenu(hMenuBar->get(), MF_POPUP, reinterpret_cast<UINT_PTR>(hMenuFile->get()), "&File");
 	AppendMenu(hMenuBar->get(), MF_POPUP, reinterpret_cast<UINT_PTR>(hMenuHelp->get()), "&Help");
 
-	SetMenu(_hwnd, hMenuBar->get());
+	SetMenu(_hwndWrapper.get(), hMenuBar->get());
 
 	return true;
 }
@@ -122,7 +122,7 @@ const std::string Window::_pick_file() {
 	UTIL::zero_memory(&pathBuff);
 
 	ofn.lStructSize = sizeof(OPENFILENAME);
-	ofn.hwndOwner = _hwnd;
+	ofn.hwndOwner = _hwndWrapper.get();
 	ofn.hInstance = GetModuleHandle(NULL);
 	ofn.lpstrFilter = "Text Files (*.txt)\0*.txt\0";
 	ofn.lpstrFile = pathBuff;
@@ -140,13 +140,13 @@ const std::string Window::_pick_file() {
 	}
 }
 
-//Window::thisWindow MUST be set before entering the message loop which will call this function!
+//Window::_thisWindow MUST be set before entering the message loop which will call this function!
 LRESULT CALLBACK Window::_wnd_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
 		case WM_COMMAND:
 			switch (LOWORD(wParam)) {
 				case IDM_FILE_OPEN:
-					thisWindow->_currentFile = thisWindow->_pick_file();
+					_thisWindow->_currentFile = _thisWindow->_pick_file();
 					break;
 				case IDM_FILE_EXIT:
 					SendMessage(hwnd, WM_CLOSE, NULL, NULL);
@@ -159,7 +159,7 @@ LRESULT CALLBACK Window::_wnd_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lP
 			break;
 
 		case WM_CLOSE:
-			thisWindow->Dependency<Core>::dep.stop_running();
+			_thisWindow->Dependency<Core>::dep.stop_running();
 			break;
 	}
 

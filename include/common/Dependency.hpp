@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Registry.h"
+#include <common/Registry.hpp>
 
 namespace MXNES {
 
@@ -10,11 +10,11 @@ namespace MXNES {
  * DI is performed by having a given class retrieve its dependencies by inheriting
  * this class. 
  *
- * Because the Registry is static and Dependency instances are not, the order of
- * initialization is deterministic.
- *
  * To help avoid inheritance hierarchy issues, classes which have inherited dependencies
- * should be marked as "final"
+ * should be marked as "final".
+ *
+ * Furthermore, since this class is meant to be used purely for composition purposes, 
+ * inheritance should be private.
  *
  * Usage:
  *		class ServiceA {
@@ -30,7 +30,7 @@ namespace MXNES {
  * 			void sayHi() { std::cout << "hi from ServiceB" << std::endl; }
  *		};
  * 
- *		class DerivedAB : public Dependency<ServiceA>, public Dependency<ServiceB> {
+ *		class DerivedAB : private Dependency<ServiceA>, private Dependency<ServiceB> {
  *		public:
  * 			DerivedAB() {}
  * 			~DerivedAB() {}

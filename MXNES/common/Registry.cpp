@@ -1,4 +1,4 @@
-#include "Registry.h"
+#include <common/Registry.hpp>
 
 using namespace MXNES;
 

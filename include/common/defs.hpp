@@ -1,6 +1,12 @@
 #pragma once
 
-#include <common/warnings.h>
+/******************************************
+*	ALWAYS include this file first!
+******************************************/
+
+//Headers containing miscellaneous definitions
+#include <common/errors.hpp>
+#include <common/warnings.hpp>
 
 #pragma warning(push, 0) //Turn off /Wall warnings from include files...
 
@@ -15,7 +21,7 @@
 #define MXNES_FORCEINLINE		inline
 #endif
 
-#pragma warning(pop) //And turn them back on
+#pragma warning(pop) //...and turn them back on
 
 #ifdef MXNES_TESTBUILD
 //Use a forward declaration to shut the compiler up when it can't find the namespaced
@@ -53,6 +59,9 @@ namespace MXNES {
 //Use this macro to prevent rvalues from being automatically promoted to signed ints,
 //and instead be treated as a TYPE_T
 #define MXNES_DECLARE_RVALUE(TYPE_T, EXPRESSION) static_cast<TYPE_T>(EXPRESSION)
+
+//Decoration for anonymous namespaces
+#define MXNES_FILESCOPE
 
 namespace MXNES {
 

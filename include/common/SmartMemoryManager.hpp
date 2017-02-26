@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core.h"
-#include "Dependency.h"
+#include <common/Core.hpp>
+#include <common/Dependency.hpp>
 
 #pragma warning(push, 0)
 #include <cstdlib>
@@ -17,7 +17,7 @@ namespace MXNES {
  * handle automatic memory management for the lifetime of that object
  */
 template<typename T>
-class SmartMemoryManager final : public Dependency<Core> {
+class SmartMemoryManager final : private Dependency<Core> {
 public:
 	SmartMemoryManager() = default;
 	~SmartMemoryManager() = default;
@@ -40,8 +40,7 @@ public:
 				+ std::to_string(numElements * sizeof(T))
 				+ " bytes of memory");
 
-			Dependency<Core>::dep.alert_err("FATAL ERROR occurred, exiting the program. "
-				"See error log file for details.");
+			Dependency<Core>::dep.alert_err(ERRORS::FATAL_ERROR_STR);
 
 			//At this point it is dangerous to continue, so we need to kill the app
 			std::abort();

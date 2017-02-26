@@ -1,12 +1,12 @@
-#include "Window.h"
-#include "SNES\MMU.h"
+#include <common/Window.hpp>
+#include <SNES/MMU.hpp>
 
 using namespace MXNES;
 using namespace MXNES::SNES;
 
 #ifdef MXNES_TESTBUILD
 
-#include "Testrunner.h"
+#include <test/Testrunner.hpp>
 
 int main(int argc, char **argv) {
 
@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
 	std::cout << std::endl << "Press ENTER to exit...";
 	std::getline(std::cin, s);
 
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 #else
@@ -37,7 +37,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Window wnd;
 
 	if (!wnd.initialize())
-		return 1;
+		return EXIT_FAILURE;
 
 	while (appCore.is_running()) {
 		appCore.sleep_for_frame_delay();
@@ -45,7 +45,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 
 
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 #endif //ifdef MXNES_TESTBUILD

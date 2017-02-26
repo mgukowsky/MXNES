@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core.h"
-#include "Dependency.h"
+#include <common/Core.hpp>
+#include <common/Dependency.hpp>
 
 #pragma warning(push, 0)
 #include <vector>
@@ -9,14 +9,14 @@
 
 namespace MXNES {
 
-class Window : Dependency<Core> {
+class Window final : private Dependency<Core> {
 public:
 	Window();
 	~Window();
 
 	MXNES_DISABLE_ALTERNATE_CONSTRUCTORS(Window);
 
-	HWND get_hwnd() const;
+	HWND& get_hwnd();
 	
 	bool initialize();
 
@@ -39,9 +39,10 @@ private:
 		~WinApiWrapper() { 
 			_deallocate();
 		}
-		void operator=(Handle_t handleArg) {
+		WinApiWrapper<Handle_t, RetVal_t, _pfnDeallocator>& operator=(Handle_t handleArg) {
 			_deallocate();
 			_handle = handleArg;
+			return *this;
 		}
 		Handle_t& get() { return _handle; }
 		bool is_nullptr() { return _handle == nullptr; }
@@ -62,17 +63,15 @@ private:
 	bool _create_menu();
 	const std::string _pick_file();
 
-	HWND _hwnd;
-
 	static const char * const _WND_CLASS_NAME;
 	static const DWORD _WINDOW_STYLES;
 	static const DWORD _EX_WINDOW_STYLES;
 
-	//Window::thisWindow MUST be set before entering the message loop which will call this function!
+	//Window::_thisWindow MUST be set before entering the message loop which will call this function!
 	static LRESULT CALLBACK _wnd_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	
 	//A pointer to the Window object which _wnd_proc should use
-	static Window *thisWindow;
+	static Window *_thisWindow;
 };
 
 } //namespace MXNES

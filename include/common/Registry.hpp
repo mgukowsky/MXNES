@@ -1,12 +1,15 @@
 #pragma once
 
-#include "defs.h"
+#include <common/defs.hpp>
 
 #pragma warning(push, 0)
+#include <cstdlib>
 #include <iostream>
 #include <memory>
+#include <new>
 #include <typeinfo>
 #include <unordered_map>
+#include <utility>
 #pragma warning(pop)
 
 namespace MXNES {
@@ -16,16 +19,22 @@ public:
 	template<typename T>
 	static bool register_object() {
 		const std::size_t key = typeid(T).hash_code();
-		if (_is_object_in_map(key)) {
-			std::cerr << "Tried to add instance of "
-				<< typeid(T).name() 
-				<< " but it was already in the registry";
+		if (!_is_object_in_map(key)) {
+			T *pNewObject = new (std::nothrow) T;
+			if (pNewObject == nullptr) {
+				std::cerr << "Failed to create Registry instance of "
+									<< typeid(T).name()
+									<< std::endl;
+
+				MessageBox(nullptr, ERRORS::FATAL_ERROR_STR, "ERROR", MB_OK | MB_TASKMODAL);
+
+				//At this point it is dangerous to continue, so we need to kill the app
+				std::abort();
+			}
+			_typeHashToInstancePointerMap.emplace(std::make_pair(key, new (std::nothrow) T));
 			return false;
 		}
-		else {
-			_typeHashToInstancePointerMap.emplace(key, new T);
-			return false;
-		}
+		return true;
 	}
 	
 	template<typename T>
@@ -68,10 +77,7 @@ private:
 	struct _VoidPointerRAIIWrapper {
 		_VoidPointerRAIIWrapper() : _vptr(nullptr) {}
 		_VoidPointerRAIIWrapper(void *vptrArg) : _vptr(vptrArg) {}
-		~_VoidPointerRAIIWrapper() { 
-			if (_vptr != nullptr) 
-				delete _vptr; 
-		}
+		~_VoidPointerRAIIWrapper() { if (_vptr != nullptr) delete _vptr; }
 
 		void *_vptr;
 	};

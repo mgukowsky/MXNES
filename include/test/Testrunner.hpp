@@ -2,7 +2,7 @@
 
 #ifdef MXNES_TESTBUILD
 
-#include "Core.h"
+#include <common/Core.hpp>
 
 #pragma warning(push, 0)
 #include <sstream>
@@ -40,11 +40,11 @@ private:
 		std::string msgStr;
 		if (retVal) {
 			msgStr = "\xFB ";
-			SetConsoleTextAttribute(_hStdout, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+			SetConsoleTextAttribute(_hStdout, _TEXT_GREEN);
 		}
 		else {
 			msgStr = "X ";
-			SetConsoleTextAttribute(_hStdout, FOREGROUND_RED | FOREGROUND_INTENSITY);
+			SetConsoleTextAttribute(_hStdout, _TEXT_RED);
 			shouldLogActualExpected = true;
 			_testStack.top().hasTestPassed = false;
 		}
@@ -92,6 +92,12 @@ private:
 
 	static const std::size_t _BORDERSIZ;
 	static const std::string _BORDERSTR;
+
+	static constexpr WORD _TEXT_GREEN = FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+	static constexpr WORD _TEXT_RED = FOREGROUND_RED | FOREGROUND_INTENSITY;
+	static constexpr WORD _TEXT_YELLOW = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+	static constexpr WORD _TEXT_WHITE = FOREGROUND_RED | FOREGROUND_GREEN |
+		FOREGROUND_BLUE | FOREGROUND_INTENSITY;
 
 };
 

@@ -1,6 +1,6 @@
 #ifdef MXNES_TESTBUILD
 
-#include "Testrunner.h"
+#include <test/Testrunner.hpp>
 
 using namespace MXNES;
 
@@ -22,8 +22,7 @@ void Testrunner::_start_test(std::string testName) {
 	if (testName.size() & 1)
 		testName += " ";
 
-	SetConsoleTextAttribute(_hStdout, 
-		FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+	SetConsoleTextAttribute(_hStdout, _TEXT_WHITE);
 	const std::string testNameStr = std::string("Starting test \"") + testName + "\"";
 	_log_decorated(testNameStr);
 	_testStack.push(testName);
@@ -31,12 +30,10 @@ void Testrunner::_start_test(std::string testName) {
 
 void Testrunner::_end_test() {
 	if (_testStack.top().hasTestPassed) {
-		SetConsoleTextAttribute(_hStdout, 
-			FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+		SetConsoleTextAttribute(_hStdout, _TEXT_WHITE);
 	}
 	else {
-		SetConsoleTextAttribute(_hStdout, 
-			FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+		SetConsoleTextAttribute(_hStdout, _TEXT_YELLOW);
 	}
 
 	const std::string completedTestStr = std::string("Ending test \"") 
@@ -45,8 +42,7 @@ void Testrunner::_end_test() {
 
 	_testStack.pop();
 	_log_decorated(completedTestStr);
-	SetConsoleTextAttribute(_hStdout,
-		FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+	SetConsoleTextAttribute(_hStdout, _TEXT_WHITE);
 }
 
 #endif //ifdef MXNES_TESTBUILD

@@ -252,25 +252,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Core.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Registry.cpp" />
+    <ClCompile Include="common\Core.cpp" />
+    <ClCompile Include="common\main.cpp" />
+    <ClCompile Include="common\Registry.cpp" />
+    <ClCompile Include="common\Window.cpp" />
     <ClCompile Include="SNES\MMU.cpp" />
-    <ClCompile Include="Testrunner.cpp" />
-    <ClCompile Include="Tests\MMUTests.cpp" />
-    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="test\MMUTests.cpp" />
+    <ClCompile Include="test\Testrunner.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\common\warnings.h" />
-    <ClInclude Include="Component.h" />
-    <ClInclude Include="Core.h" />
-    <ClInclude Include="defs.h" />
-    <ClInclude Include="Dependency.h" />
-    <ClInclude Include="Registry.h" />
-    <ClInclude Include="SmartMemoryManager.h" />
-    <ClInclude Include="SNES\MMU.h" />
-    <ClInclude Include="Testrunner.h" />
-    <ClInclude Include="Window.h" />
+    <ClInclude Include="..\include\common\Component.hpp" />
+    <ClInclude Include="..\include\common\Core.hpp" />
+    <ClInclude Include="..\include\common\defs.hpp" />
+    <ClInclude Include="..\include\common\Dependency.hpp" />
+    <ClInclude Include="..\include\common\errors.hpp" />
+    <ClInclude Include="..\include\common\Registry.hpp" />
+    <ClInclude Include="..\include\common\SmartMemoryManager.hpp" />
+    <ClInclude Include="..\include\common\warnings.hpp" />
+    <ClInclude Include="..\include\common\Window.hpp" />
+    <ClInclude Include="..\include\SNES\MMU.hpp" />
+    <ClInclude Include="..\include\test\Testrunner.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

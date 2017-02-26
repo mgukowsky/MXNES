@@ -1,4 +1,4 @@
-#include "MMU.h"
+#include <SNES/MMU.hpp>
 
 using namespace MXNES;
 using namespace MXNES::SNES;
@@ -43,7 +43,7 @@ void MMU::map_memory(const MMU::MappingModel mappingModel) {
  * @return none
  */
 void MMU::reset() {
-	static constexpr u16 LIMIT = NUM_BANKS * NUM_BANKS_PER_PAGE;
+	static constexpr u16 LIMIT = NUM_BANKS * NUM_PAGES_PER_BANK;
 	for (u16 pageIdx = 0; pageIdx < LIMIT; ++pageIdx) {
 		Page &refPage = _pageTable[pageIdx];
 		if (!refPage.isMapped) {

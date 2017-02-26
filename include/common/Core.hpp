@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Registry.h"
+#include <common/Registry.hpp>
 
 #pragma warning(push, 0)
 #include <chrono>
