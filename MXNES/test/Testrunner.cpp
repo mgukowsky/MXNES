@@ -1,6 +1,6 @@
 #ifdef MXNES_TESTBUILD
 
-#include <test/Testrunner.hpp>
+#include "test/Testrunner.hpp"
 
 using namespace MXNES;
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <common/Registry.hpp>
+#include "common/Registry.hpp"
 
 namespace MXNES {
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <common/Core.hpp>
-#include <common/Dependency.hpp>
+#include "common/Core.hpp"
+#include "common/Dependency.hpp"
 
 #pragma warning(push, 0)
 #include <vector>
@@ -24,6 +24,7 @@ public:
 
 private:
 	//We need to pass these enum values to WIN32 as uints, so don't use an enum class
+	//FYI make sure that these values don't conflict with the ones in common/resource.h
 	enum MenuID {
 		IDM_FILE_OPEN = 1,
 		IDM_FILE_CLOSE,
@@ -62,6 +63,7 @@ private:
 
 	bool _create_menu();
 	const std::string _pick_file();
+	HINSTANCE _get_hinstance() const;
 
 	static const char * const _WND_CLASS_NAME;
 	static const DWORD _WINDOW_STYLES;

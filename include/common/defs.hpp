@@ -5,8 +5,8 @@
 ******************************************/
 
 //Headers containing miscellaneous definitions
-#include <common/errors.hpp>
-#include <common/warnings.hpp>
+#include "common/errors.hpp"
+#include "common/warnings.hpp"
 
 #pragma warning(push, 0) //Turn off /Wall warnings from include files...
 

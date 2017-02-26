@@ -1,4 +1,5 @@
-#include <common/Window.hpp>
+#include "common/Window.hpp"
+#include "common/resource.h"
 
 using namespace MXNES;
 
@@ -29,9 +30,9 @@ bool Window::initialize() {
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.hbrBackground = CreateSolidBrush(RGB(0x00, 0xFF, 0x00));
 	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	wcex.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
-	wcex.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
-	wcex.hInstance = GetModuleHandle(nullptr);
+	wcex.hIcon = LoadIcon(_get_hinstance(), MAKEINTRESOURCE(MXNES_IDI_APP_EMBEDDED));
+	wcex.hIconSm = LoadIcon(_get_hinstance(), MAKEINTRESOURCE(MXNES_IDI_APP_EMBEDDED));
+	wcex.hInstance = _get_hinstance();
 	wcex.lpfnWndProc = _wnd_proc;
 	wcex.lpszClassName = _WND_CLASS_NAME;
 	wcex.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
@@ -53,7 +54,7 @@ bool Window::initialize() {
 	_hwndWrapper = CreateWindowEx(_EX_WINDOW_STYLES, _WND_CLASS_NAME, "MXNES",
 		_WINDOW_STYLES, CW_USEDEFAULT, CW_USEDEFAULT,
 		rect.right - rect.left, rect.bottom - rect.top, nullptr, nullptr, 
-		GetModuleHandle(nullptr), nullptr);
+		_get_hinstance(), nullptr);
 
 	if (_hwndWrapper.is_nullptr()) {
 		Dependency<Core>::dep.alert_err("Failed to create window! This is likely "
@@ -123,7 +124,7 @@ const std::string Window::_pick_file() {
 
 	ofn.lStructSize = sizeof(OPENFILENAME);
 	ofn.hwndOwner = _hwndWrapper.get();
-	ofn.hInstance = GetModuleHandle(NULL);
+	ofn.hInstance = _get_hinstance();
 	ofn.lpstrFilter = "Text Files (*.txt)\0*.txt\0";
 	ofn.lpstrFile = pathBuff;
 	ofn.nMaxFile = MAX_PATH;
@@ -138,6 +139,10 @@ const std::string Window::_pick_file() {
 		Dependency<Core>::dep.logmsg(std::string("Selected file: \"") + pathBuff + "\"");
 		return pathBuff;
 	}
+}
+
+HINSTANCE Window::_get_hinstance() const {
+	return GetModuleHandle(nullptr);
 }
 
 //Window::_thisWindow MUST be set before entering the message loop which will call this function!

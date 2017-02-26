@@ -89,5 +89,18 @@
     <ClInclude Include="..\include\SNES\MMU.hpp">
       <Filter>Header Files\SNES</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\common\resource.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\resources\MXNES.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\resources\MXNES.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

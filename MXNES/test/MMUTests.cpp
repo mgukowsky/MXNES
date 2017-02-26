@@ -1,8 +1,8 @@
 #ifdef MXNES_TESTBUILD
 
-#include <common/defs.hpp>
-#include <SNES/MMU.hpp>
-#include <test/Testrunner.hpp>
+#include "common/defs.hpp"
+#include "SNES/MMU.hpp"
+#include "test/Testrunner.hpp"
 
 using namespace MXNES;
 using namespace MXNES::SNES;

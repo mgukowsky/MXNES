@@ -1,7 +1,7 @@
 #pragma once
 
-#include <common/Core.hpp>
-#include <common/Dependency.hpp>
+#include "common/Core.hpp"
+#include "common/Dependency.hpp"
 
 #pragma warning(push, 0)
 #include <cstdlib>

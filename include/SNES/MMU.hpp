@@ -1,10 +1,9 @@
 #pragma once
 
-#include <common/defs.hpp>
-
-#include <common/Component.hpp>
-#include <common/Core.hpp>
-#include <common/SmartMemoryManager.hpp>
+#include "common/defs.hpp"
+#include "common/Component.hpp"
+#include "common/Core.hpp"
+#include "common/SmartMemoryManager.hpp"
 
 #pragma warning(push, 0)
 #include <cassert>

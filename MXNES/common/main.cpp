@@ -1,5 +1,5 @@
-#include <common/Window.hpp>
-#include <SNES/MMU.hpp>
+#include "common/Window.hpp"
+#include "SNES/MMU.hpp"
 
 using namespace MXNES;
 using namespace MXNES::SNES;

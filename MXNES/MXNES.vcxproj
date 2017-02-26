@@ -119,6 +119,10 @@
       <AdditionalLibraryDirectories>$(SolutionDir)lib\$(PlatformTarget)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
     </Link>
+    <PreBuildEvent>
+      <Command>python $(SolutionDir)OpGen\OpGen.py $(ProjectDir)SNES\</Command>
+      <Message>Generate the opcode functions for the emulated CPU</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">
     <ClCompile>
@@ -144,6 +148,10 @@
       <AdditionalLibraryDirectories>$(SolutionDir)lib\$(PlatformTarget)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Console</SubSystem>
     </Link>
+    <PreBuildEvent>
+      <Command>python $(SolutionDir)OpGen\OpGen.py $(ProjectDir)SNES\</Command>
+      <Message>Generate the opcode functions for the emulated CPU</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -169,6 +177,10 @@
       <AdditionalLibraryDirectories>$(SolutionDir)lib\$(PlatformTarget)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
     </Link>
+    <PreBuildEvent>
+      <Command>python $(SolutionDir)OpGen\OpGen.py $(ProjectDir)SNES\</Command>
+      <Message>Generate the opcode functions for the emulated CPU</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Test|x64'">
     <ClCompile>
@@ -194,6 +206,10 @@
       <AdditionalLibraryDirectories>$(SolutionDir)lib\$(PlatformTarget)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Console</SubSystem>
     </Link>
+    <PreBuildEvent>
+      <Command>python $(SolutionDir)OpGen\OpGen.py $(ProjectDir)SNES\</Command>
+      <Message>Generate the opcode functions for the emulated CPU</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -222,6 +238,10 @@
       <AdditionalLibraryDirectories>$(SolutionDir)lib\$(PlatformTarget)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
     </Link>
+    <PreBuildEvent>
+      <Command>python $(SolutionDir)OpGen\OpGen.py $(ProjectDir)SNES\</Command>
+      <Message>Generate the opcode functions for the emulated CPU</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -250,6 +270,10 @@
       <AdditionalLibraryDirectories>$(SolutionDir)lib\$(PlatformTarget)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
     </Link>
+    <PreBuildEvent>
+      <Command>python $(SolutionDir)OpGen\OpGen.py $(ProjectDir)SNES\</Command>
+      <Message>Generate the opcode functions for the emulated CPU</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="common\Core.cpp" />
@@ -267,11 +291,18 @@
     <ClInclude Include="..\include\common\Dependency.hpp" />
     <ClInclude Include="..\include\common\errors.hpp" />
     <ClInclude Include="..\include\common\Registry.hpp" />
+    <ClInclude Include="..\include\common\resource.h" />
     <ClInclude Include="..\include\common\SmartMemoryManager.hpp" />
     <ClInclude Include="..\include\common\warnings.hpp" />
     <ClInclude Include="..\include\common\Window.hpp" />
     <ClInclude Include="..\include\SNES\MMU.hpp" />
     <ClInclude Include="..\include\test\Testrunner.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\resources\MXNES.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\resources\MXNES.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

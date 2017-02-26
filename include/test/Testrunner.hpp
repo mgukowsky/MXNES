@@ -2,7 +2,7 @@
 
 #ifdef MXNES_TESTBUILD
 
-#include <common/Core.hpp>
+#include "common/Core.hpp"
 
 #pragma warning(push, 0)
 #include <sstream>
@@ -14,7 +14,6 @@ namespace MXNES {
 
 class Testrunner {
 public:
-	typedef void(*TestFunc)();
 
 	Testrunner();
 	~Testrunner() = default;
