@@ -101,6 +101,7 @@ private:
 	template<typename T>
 	void _log(const T &msg, std::ostream &stream) const {
 		//We need to lock here because localtime() modifies a static internal object
+		//and, thus, it is not threadsafe
 		std::lock_guard<std::mutex> lock(_mutex);
 		char timeBuff[_STRFTIME_BUFFER_SIZE];
 		std::time_t timeNow;

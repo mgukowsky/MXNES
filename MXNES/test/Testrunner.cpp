@@ -4,7 +4,7 @@
 
 using namespace MXNES;
 
-const std::size_t Testrunner::_BORDERSIZ = 60;
+const std::size_t Testrunner::_BORDERSIZ = 80;
 const std::string Testrunner::_BORDERSTR(Testrunner::_BORDERSIZ, '*');
 
 Testrunner::Testrunner()
@@ -16,6 +16,28 @@ void Testrunner::run_test_suite() {
 	_start_test("MXNES Test Suite");
 	_mmu_tests();
 	_end_test();
+
+	std::string finalMsg = "";
+
+	if (_numAllPassedTests == _numAllTests) {
+		SetConsoleTextAttribute(_hStdout, _TEXT_GREEN);
+		finalMsg = "; All tests passed :D";
+	}
+	else {
+		SetConsoleTextAttribute(_hStdout, _TEXT_RED);
+	}
+
+	std::stringstream ss;
+	ss	<< "FINAL RESULTS: Passed "
+			<< _numAllPassedTests
+			<< " of "
+			<< _numAllTests
+			<< " total tests"
+			<< finalMsg;
+
+	_log_decorated(ss.str());
+
+	SetConsoleTextAttribute(_hStdout, _TEXT_WHITE);
 }
 
 void Testrunner::_start_test(std::string testName) {
@@ -29,20 +51,41 @@ void Testrunner::_start_test(std::string testName) {
 }
 
 void Testrunner::_end_test() {
-	if (_testStack.top().hasTestPassed) {
-		SetConsoleTextAttribute(_hStdout, _TEXT_WHITE);
+	TestInfo &currentTest = _testStack.top();
+	const bool didThisTestPass = currentTest.hasTestPassed;
+	const u32 numThisTestPassed = currentTest.numPassedTests;
+	const u32 numThisTestTotal = currentTest.numTotalTests;
+
+	if (didThisTestPass) {
+		SetConsoleTextAttribute(_hStdout, _TEXT_GREEN);
 	}
 	else {
 		SetConsoleTextAttribute(_hStdout, _TEXT_YELLOW);
 	}
 
-	const std::string completedTestStr = std::string("Ending test \"") 
-		+ _testStack.top().testName 
-		+ "\"";
+	std::stringstream ss;
+	ss	<< "Ending test \""
+			<< currentTest.testName
+			<< "\", with "
+			<< numThisTestPassed
+			<< " of "
+			<< numThisTestTotal
+			<< " tests passed";
+
+	_log_decorated(ss.str());
+	SetConsoleTextAttribute(_hStdout, _TEXT_WHITE);
+
+	_numAllPassedTests += numThisTestPassed;
+	_numAllTests += numThisTestTotal;
 
 	_testStack.pop();
-	_log_decorated(completedTestStr);
-	SetConsoleTextAttribute(_hStdout, _TEXT_WHITE);
+
+	if (!_testStack.empty()) {
+		TestInfo &newCurrentTest = _testStack.top();
+		newCurrentTest.hasTestPassed = didThisTestPass;
+		++newCurrentTest.numTotalTests;
+		newCurrentTest.numPassedTests += (didThisTestPass) ? 1 : 0;
+	}
 }
 
 #endif //ifdef MXNES_TESTBUILD

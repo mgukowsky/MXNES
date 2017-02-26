@@ -27,10 +27,11 @@ private:
 
 	struct TestInfo {
 		TestInfo(std::string testNameArg)
-			: testName(testNameArg), hasTestPassed(true) {}
+			: testName(testNameArg), hasTestPassed(true),
+				numTotalTests(0), numPassedTests(0) {}
 		std::string testName;
 		bool hasTestPassed;
-
+		u32 numTotalTests, numPassedTests;
 	};
 
 	template<typename T>
@@ -38,16 +39,19 @@ private:
 		bool retVal = actual == expected;
 		bool shouldLogActualExpected = false;
 		std::string msgStr;
+		TestInfo &currentTest = _testStack.top();
 		if (retVal) {
 			msgStr = "\xFB ";
 			SetConsoleTextAttribute(_hStdout, _TEXT_GREEN);
+			++currentTest.numPassedTests;
 		}
 		else {
 			msgStr = "X ";
 			SetConsoleTextAttribute(_hStdout, _TEXT_RED);
 			shouldLogActualExpected = true;
-			_testStack.top().hasTestPassed = false;
+			currentTest.hasTestPassed = false;
 		}
+		++currentTest.numTotalTests;
 
 		_log(msgStr + description );
 
@@ -87,6 +91,7 @@ private:
 
 	void _mmu_tests();
 
+	u32 _numAllTests, _numAllPassedTests;
 	std::stack<TestInfo> _testStack;
 	HANDLE _hStdout;
 
