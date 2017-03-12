@@ -17,7 +17,7 @@ void Testrunner::_rom_tests() {
 	_start_test("ROM Behavior");
 
 	ROM rom;
-	rom.open_file("");
+	//rom.open_file("");
 
 	_end_test();
 }

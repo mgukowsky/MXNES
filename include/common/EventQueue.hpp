@@ -13,7 +13,7 @@ public:
 	};
 
 	struct Event {
-		u8 type;
+		EventType type;
 		void *pData;
 	};
 
@@ -22,7 +22,7 @@ public:
 
 	MXNES_DISABLE_ALTERNATE_CONSTRUCTORS(EventQueue);
 
-	void register_event(const u8 EventType, void *data);
+	void register_event(const EventType EventType, void *data);
 	Event service_event();
 
 private:
@@ -31,6 +31,7 @@ private:
 	Event *_queue;
 	volatile u16 _readPtr, _writePtr;
 	SmartMemoryManager<Event> _memoryManager;
+	AtomicFlag _spinlock;
 };
 
 } //namespace MXNES
